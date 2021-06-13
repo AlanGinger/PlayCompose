@@ -3,7 +3,9 @@ package com.alanginger.playcompose
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.*
@@ -47,7 +49,6 @@ fun MyApp(content: @Composable () -> Unit) {
     PlayComposeTheme {
         Surface(color = Color.Yellow) {
             content()
-
         }
     }
 }
@@ -97,11 +98,21 @@ fun ListView() {
     LazyColumn(modifier = Modifier.fillMaxHeight()) {
         val names: List<String> = List(1000) { "Hello Android #$it" }
         items(items = names) { name ->
-            Text(
-                text = name,
-                style = typography.body1
-            )
-            Divider(modifier = Modifier.padding(0.dp, 10.dp), color = Color.Black)
+            ItemView(name)
         }
     }
+}
+
+@Composable
+fun ItemView(text: String) {
+    var isSelected by remember { mutableStateOf(false) }
+    val backgroundColor by animateColorAsState(if (isSelected) Color.Red else Color.Transparent)
+    Text(
+        text = text,
+        style = typography.body1,
+        modifier = Modifier
+            .background(color = backgroundColor)
+            .clickable(onClick = { isSelected = !isSelected })
+    )
+    Divider(modifier = Modifier.padding(0.dp, 10.dp), color = Color.Black)
 }
